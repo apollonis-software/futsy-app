@@ -5,7 +5,7 @@ export default function Index() {
   useEffect(() => {
     const isAuthenticated = false;
     if (isAuthenticated) {
-      router.replace("/(tabs)");
+      router.replace("/screens/onboarding/onboarding");
     } else {
       router.replace("/screens/onboarding/onboarding");
     }
