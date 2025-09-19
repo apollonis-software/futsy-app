@@ -1,23 +1,29 @@
-import { router } from "expo-router";
-import React, { useState } from "react";
+import { FutsyHorizontalSvg } from "@/assets/svgs";
+import BackButton from "@/components/general/BackButton";
+import CustomButton from "@/components/general/CustomButton";
+import CustomTextInput from "@/components/general/CustomTextInput";
+import GeneralBackground from "@/components/general/GeneralBackground";
 import {
-  Alert,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  LoginFormValues,
+  loginValidationSchema,
+} from "@/validations/loginValidation";
+import { router } from "expo-router";
+import { Formik } from "formik";
+import React from "react";
+import { Alert } from "react-native";
+import { Checkbox, Text, TouchableOpacity, View } from "react-native-ui-lib";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const initialValues: LoginFormValues = {
+    email: "",
+    password: "",
+    rememberMe: false,
+  };
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
+  const handleLogin = (values: LoginFormValues) => {
+    console.log("Login values:", values);
+    console.log("Remember Me:", values.rememberMe);
+    Alert.alert("Success", "Login successful");
     router.replace("/screens/onboarding/onboarding");
   };
 
@@ -25,97 +31,114 @@ const LoginScreen = () => {
     router.push("/screens/auth/signup");
   };
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
+    <GeneralBackground>
+      <BackButton onPress={handleGoBack} color="#206F52" />
+      <View flex paddingH-20 centerV marginT-20>
+        <View paddingH-20 flex>
+          <View marginV-20>
+            <FutsyHorizontalSvg />
+          </View>
+          <View marginT-10>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={loginValidationSchema}
+              onSubmit={handleLogin}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                values,
+                errors,
+                touched,
+                isValid,
+              }) => (
+                <>
+                  <CustomTextInput
+                    placeholder="Email"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    error={
+                      touched.email && errors.email ? errors.email : undefined
+                    }
+                    hasError={touched.email && !!errors.email}
+                  />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+                  <CustomTextInput
+                    placeholder="Şifre"
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    secureTextEntry
+                    error={
+                      touched.password && errors.password
+                        ? errors.password
+                        : undefined
+                    }
+                    hasError={touched.password && !!errors.password}
+                  />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Sign In</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-          <Text style={styles.signUpButtonText}>
-            Don&apos;t have an account? Sign Up
-          </Text>
-        </TouchableOpacity>
+                  <View row spread centerV marginB-20>
+                    <Checkbox
+                      value={values.rememberMe}
+                      onValueChange={(value) =>
+                        setFieldValue("rememberMe", value)
+                      }
+                      label="Remember Me"
+                      labelStyle={{
+                        fontSize: 14,
+                        fontFamily: "Inter-Regular",
+                        color: "#666",
+                      }}
+                      color="#206F52"
+                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          "Info",
+                          "Forgot password functionality will be implemented"
+                        );
+                      }}
+                    >
+                      <Text h8SB color="black">
+                        Forgot Password?
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View marginT-20>
+                    <CustomButton
+                      label="Login"
+                      loading={false}
+                      func={handleSubmit}
+                      textColor="white"
+                      color="#206F52"
+                    />
+                  </View>
+                </>
+              )}
+            </Formik>
+          </View>
+          <View marginV-7 />
+          <CustomButton
+            label="Sign Up"
+            loading={false}
+            func={handleSignUp}
+            textColor="white"
+            color="#206F52"
+          />
+        </View>
       </View>
-    </View>
+    </GeneralBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    padding: 20,
-  },
-  content: {
-    maxWidth: 400,
-    alignSelf: "center",
-    width: "100%",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 32,
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  loginButton: {
-    backgroundColor: "#007AFF",
-    borderRadius: 8,
-    paddingVertical: 16,
-    marginBottom: 16,
-  },
-  loginButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  signUpButton: {
-    paddingVertical: 12,
-  },
-  signUpButtonText: {
-    color: "#007AFF",
-    fontSize: 16,
-    textAlign: "center",
-  },
-});
 
 export default LoginScreen;
