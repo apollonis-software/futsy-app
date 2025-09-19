@@ -6,7 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 const LoginScreen = () => {
@@ -18,7 +18,7 @@ const LoginScreen = () => {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    router.replace("/(tabs)");
+    router.replace("/screens/onboarding/onboarding");
   };
 
   const handleSignUp = () => {

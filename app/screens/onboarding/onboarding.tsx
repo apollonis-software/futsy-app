@@ -1,8 +1,9 @@
 import { FutsyMainSvg } from "@/assets/svgs";
+import CustomButton from "@/components/general/CustomButton";
 import GeneralBackground from "@/components/general/GeneralBackground";
 import { router } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native-ui-lib";
 
 const OnboardingScreen = () => {
   const handleGetStarted = () => {
@@ -11,60 +12,38 @@ const OnboardingScreen = () => {
 
   return (
     <GeneralBackground>
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Welcome to Futsy</Text>
-          <FutsyMainSvg />
-          <Text style={styles.subtitle}>
-            Discover amazing features and get started with your journey
+      <View flex-5 centerH style={{ justifyContent: "flex-end" }}>
+        <FutsyMainSvg />
+      </View>
+      <View flex-4 centerV paddingH-70>
+        <View center>
+          <Text h6R text center>
+            Find soccer players in your area to play together
           </Text>
-          <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
-            <Text style={styles.buttonText}>Get Started</Text>
-          </TouchableOpacity>
+        </View>
+        <View flex centerH gap-12 marginT-40>
+          <CustomButton
+            label="Login"
+            loading={false}
+            func={() => {
+              router.push("/screens/auth/login");
+            }}
+            textColor="white"
+            color="#206F52"
+          />
+          <CustomButton
+            label="Sign Up"
+            loading={false}
+            func={() => {
+              router.push("/screens/auth/signup");
+            }}
+            textColor="white"
+            color="#206F52"
+          />
         </View>
       </View>
     </GeneralBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  content: {
-    alignItems: "center",
-    maxWidth: 300,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    lineHeight: 24,
-    marginBottom: 40,
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
-    width: "100%",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-});
 
 export default OnboardingScreen;
